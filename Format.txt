@@ -1,0 +1,5 @@
+All file/folder name : Camel
+All class names : Camel
+Member variables/function/structs names : Camel
+Objects : underscore for spaces and lower cases
+Put comments everywhere for explanation
