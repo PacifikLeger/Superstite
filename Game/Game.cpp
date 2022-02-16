@@ -36,11 +36,8 @@ void Game::Render(sf::RenderWindow &Window){
 void Game::GameStateUpdate(float DeltaTime){
     //UserInputtable component assumes that it is a player
     for(auto& i : ecs.UserInputtable){
-        //Setting the position of the userinputtable to the spirte associated
-        ecs.Position[i.first].first = ecs.Vertex[i.first].at(0).position.x;
-        ecs.Position[i.first].second = ecs.Vertex[i.first].at(0).position.y;
         //Setting gamestateview center to the userinputtable entity
-        GameStateView.setCenter(ecs.Position[i.first].first, ecs.Position[i.first].second);        
+        GameStateView.setCenter(ecs.Position[i.first].first, ecs.Position[i.first].second);
         //No accessing a emmpty queue
         if(!EventStream.empty()){
             switch(EventStream.back().type){
@@ -119,16 +116,19 @@ void Game::GameStateRender(sf::RenderWindow &Window){
     Window.clear(sf::Color(100, 149, 237));
     //Setting the view
     Window.setView(GameStateView);
-    //Tilemap loop
+    //Tilemap loopp
     Window.draw(Grass, &Grass_t);
     std::unordered_map<std::string, sf::VertexArray> Buffer;
-    std::unordered_map<int, sf::RenderStates> RenderState;
-    sf::VertexArray Vertices(sf::Quads, ecs.Texture.size() * 4);
+    sf::RenderStates RenderState;
+    sf::VertexArray Vertices(sf::Quads, 4);
     for(auto& i : ecs.Texture){
-        Vertices.append(sf::Vertex(sf::Vector2f()))
-    }
-    for(auto& i : ecs.Renderable){
-        
+        Vertices.clear();
+        Vertices.append(sf::Vertex(sf::Vector2f(ecs.Position[i.first].first, ecs.Position[i.first].second), sf::Vector2f(0, 0)));
+        Vertices.append(sf::Vertex(sf::Vector2f(ecs.Position[i.first].first + ecs.TextureMaping[i.second].getSize().x, ecs.Position[i.first].second), sf::Vector2f(ecs.TextureMaping[i.second].getSize().x, 0)));
+        Vertices.append(sf::Vertex(sf::Vector2f(ecs.Position[i.first].first + ecs.TextureMaping[i.second].getSize().x, ecs.Position[i.first].second + ecs.TextureMaping[i.second].getSize().y), sf::Vector2f(ecs.TextureMaping[i.second].getSize().x, ecs.TextureMaping[i.second].getSize().y)));
+        Vertices.append(sf::Vertex(sf::Vector2f(ecs.Position[i.first].first, ecs.Position[i.first].second + ecs.TextureMaping[i.second].getSize().y), sf::Vector2f(0, ecs.TextureMaping[i.second].getSize().y)));
+        RenderState.texture = &ecs.TextureMaping[i.second];
+        Window.draw(Vertices, RenderState);
     }
 }
 //Game functions 
