@@ -1,10 +1,13 @@
 #pragma once
 #include "../PreCompileHeaders/PCH.hpp"
 #include "../ECS/ECS.hpp"
+#include "../EventHandling/InputBroker.hpp"
 class Game{
 public:
     Game();
     //Objects
+    //InputBroker
+    InputBroker inputbroker;
     //ECS
     ECS ecs;
     //member functions
@@ -32,5 +35,6 @@ public:
     //Gamestate
     bool InGameState;
     sf::View GameStateView;
+
 private:
 };

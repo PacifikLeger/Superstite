@@ -31,7 +31,6 @@ void Game::Render(sf::RenderWindow &Window){
         GameStateRender(Window);
     }
 }
-//Corresponding member functions
 //GameState
 void Game::GameStateUpdate(float DeltaTime){
     //UserInputtable component assumes that it is a player
@@ -77,38 +76,6 @@ void Game::GameStateUpdate(float DeltaTime){
     }
 }
 void Game::GameStateUpdateEvents(sf::Event Events){
-    switch(Events.type){
-        case sf::Event::KeyPressed:
-            if(Events.key.code == sf::Keyboard::W){
-                EventStream.push(Events);
-            }
-            if(Events.key.code == sf::Keyboard::S){
-                EventStream.push(Events);
-            }
-            if(Events.key.code == sf::Keyboard::A){
-                EventStream.push(Events);
-            }
-            if(Events.key.code == sf::Keyboard::D){
-                EventStream.push(Events);
-            }
-        break;
-        case sf::Event::KeyReleased:
-            if(Events.key.code == sf::Keyboard::W){
-                EventStream.push(Events);
-            }
-            if(Events.key.code == sf::Keyboard::S){
-                EventStream.push(Events);
-            }
-            if(Events.key.code == sf::Keyboard::A){
-                EventStream.push(Events);
-            }
-            if(Events.key.code == sf::Keyboard::D){
-                EventStream.push(Events);
-            }
-        break;
-        default:
-        break;
-    }
     
 }
 void Game::GameStateRender(sf::RenderWindow &Window){
