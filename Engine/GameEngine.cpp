@@ -1,5 +1,5 @@
 #include "GameEngine.hpp"
-GameEngine::GameEngine(): WindowSize(1000, 1000), Window(sf::VideoMode(WindowSize.x, WindowSize.y), "sfml", sf::Style::Titlebar | sf::Style::Close){
+GameEngine::GameEngine(): WindowSize(1000, 1000), Window(sf::VideoMode(WindowSize.x, WindowSize.y), "Superstite Snapshot 22w7a", sf::Style::Titlebar | sf::Style::Close){
 }
 bool GameEngine::Running(){
     if(Window.isOpen())

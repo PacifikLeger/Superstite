@@ -2,10 +2,13 @@
 #include "../PreCompileHeaders/PCH.hpp"
 #include "../ECS/ECS.hpp"
 #include "../EventHandling/InputBroker.hpp"
+#include "../CollisionDetection/Colision.hpp"
 class Game{
 public:
     Game();
     //Objects
+    //Colisions
+    Collision collision;
     //InputBroker
     InputBroker inputbroker;
     //ECS

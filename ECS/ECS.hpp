@@ -8,6 +8,7 @@ public:
     std::unordered_map<int, std::pair<float, float>> Position;
     std::unordered_map<int, signed int> Health;
     std::unordered_map<int, std::string> Texture;
+    std::unordered_map<int, sf::FloatRect> HitBox;
     std::unordered_map<std::string, sf::Texture> TextureMaping;
     std::unordered_map<int, std::pair<float, float>> Speed;
     std::unordered_map<int, bool> Renderable;

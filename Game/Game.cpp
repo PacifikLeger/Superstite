@@ -35,21 +35,26 @@ void Game::Render(sf::RenderWindow &Window){
 void Game::GameStateUpdate(float DeltaTime){
     //UserInputtable component assumes that it is a player
     for(auto& i : ecs.UserInputtable){
+        //Declares a userinputtable vector to be used for moving
+        sf::Vector2f UserInputtableVector;
         //Setting gamestateview center to the userinputtable entity
         GameStateView.setCenter(ecs.Position[i.first].first, ecs.Position[i.first].second);
         //No accessing a emmpty queue
         if(inputbroker.GetKey(sf::Keyboard::W)){
-            ecs.Position[i.first].second -= ecs.Speed[i.first].second*DeltaTime;
+            UserInputtableVector.y -= ecs.Speed[i.first].second*DeltaTime;
         }
         if(inputbroker.GetKey(sf::Keyboard::S)){
-            ecs.Position[i.first].second += ecs.Speed[i.first].second*DeltaTime;
+            UserInputtableVector.y += ecs.Speed[i.first].second*DeltaTime;
         }
         if(inputbroker.GetKey(sf::Keyboard::A)){
-            ecs.Position[i.first].first -= ecs.Speed[i.first].first*DeltaTime;
+            UserInputtableVector.x -= ecs.Speed[i.first].first*DeltaTime;
         }
         if(inputbroker.GetKey(sf::Keyboard::D)){
-            ecs.Position[i.first].first += ecs.Speed[i.first].first*DeltaTime;
+            UserInputtableVector.x += ecs.Speed[i.first].first*DeltaTime;
         }
+        collision.CheckCollision(ecs.HitBox, ecs.UserInputtable, UserInputtableVector);
+        ecs.Position[i.first].first += UserInputtableVector.x;
+        ecs.Position[i.first].second += UserInputtableVector.y;
     }
 }
 void Game::GameStateUpdateEvents(sf::Event Events){
@@ -127,12 +132,15 @@ void Game::RegisterGeneratedMap(){
             if(Noise >= 0.6){
                 //Position inserting cause ill need to use it in vertices
                 ecs.Position.insert(std::make_pair(ecs.EntityID, std::make_pair(i * ecs.TextureMaping[TreeDefTextureKey].getSize().x, j * ecs.TextureMaping[TreeDefTextureKey].getSize().y)));
+                //Making the hitbox
+                sf::FloatRect TreeDefHitBox(ecs.Position[ecs.EntityID].first, ecs.Position[ecs.EntityID].second, ecs.TextureMaping[TreeDefTextureKey].getSize().x, ecs.TextureMaping[TreeDefTextureKey].getSize().y);
                 //Innserting the default values
                 ecs.Breakable.insert(std::make_pair(ecs.EntityID, TreeDefBreakable));
                 ecs.Placeable.insert(std::make_pair(ecs.EntityID, TreeDefPlaceable));
                 ecs.Renderable.insert(std::make_pair(ecs.EntityID, TreeDefRenderable));
                 ecs.MapGenerated.insert(std::make_pair(ecs.EntityID, TreeDefMapGenerated));
                 ecs.Texture.insert(std::make_pair(ecs.EntityID, TreeDefTextureKey));
+                ecs.HitBox.insert(std::make_pair(ecs.EntityID, TreeDefHitBox));
                 ecs.EntityID++;
             }
         }
@@ -150,12 +158,14 @@ void Game::RegisterPlayer(){
         std::string PlayerDefTextureKey = "Player";
         //Position insert here because ill need to use it in vertices
         ecs.Position.insert(std::make_pair(ecs.EntityID, std::make_pair(rand() % PlayerDefMaxPos.x * ecs.TextureMaping[PlayerDefTextureKey].getSize().x, rand() % PlayerDefMaxPos.y * ecs.TextureMaping[PlayerDefTextureKey].getSize().y)));
+        sf::FloatRect PlayerDefHitBox(ecs.Position[ecs.EntityID].first, ecs.Position[ecs.EntityID].second, ecs.TextureMaping[PlayerDefTextureKey].getSize().x, ecs.TextureMaping[PlayerDefTextureKey].getSize().y);
         //Inserting default values in components
         ecs.Health.insert(std::make_pair(ecs.EntityID, PlayerDefHealth));
         ecs.Renderable.insert(std::make_pair(ecs.EntityID, PlayerDefRenderable));
         ecs.UserInputtable.insert(std::make_pair(ecs.EntityID, PlayerDefInputtable));
         ecs.Speed.insert(std::make_pair(ecs.EntityID, std::make_pair(PlayerDefSpeed.x, PlayerDefSpeed.y)));
         ecs.Texture.insert(std::make_pair(ecs.EntityID, PlayerDefTextureKey));
+        ecs.HitBox.insert(std::make_pair(ecs.EntityID, PlayerDefHitBox));
         //Increments entity id cause random would be chaotic
         ecs.EntityID++;
 }
