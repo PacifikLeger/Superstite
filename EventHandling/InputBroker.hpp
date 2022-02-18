@@ -3,11 +3,13 @@
 class InputBroker {
 public:
     InputBroker(){
-        KeyStates.reserve(sf::Keyboard::KeyCount);
+    }
+    bool PushKey(sf::Keyboard::Key Key, bool Value){
+        KeyStates[Key] = Value;
     }
     bool GetKey(sf::Keyboard::Key Key) const{
-        return KeyStates.at(Key);
+        return KeyStates[Key];
     }
 private:
-    std::unordered_map<sf::Keyboard::Key, bool> KeyStates;
+    std::array<bool, sf::Keyboard::KeyCount> KeyStates;
 };

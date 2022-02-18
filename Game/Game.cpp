@@ -38,45 +38,31 @@ void Game::GameStateUpdate(float DeltaTime){
         //Setting gamestateview center to the userinputtable entity
         GameStateView.setCenter(ecs.Position[i.first].first, ecs.Position[i.first].second);
         //No accessing a emmpty queue
-        if(!EventStream.empty()){
-            switch(EventStream.back().type){
-                case sf::Event::KeyPressed:
-                    if(EventStream.back().key.code == sf::Keyboard::W){
-                        ecs.Position[i.first].second -= ecs.Speed[i.first].second*DeltaTime;
-                    }
-                    if(EventStream.back().key.code == sf::Keyboard::S){
-                        ecs.Position[i.first].second += ecs.Speed[i.first].second*DeltaTime;
-                    }
-                    if(EventStream.back().key.code == sf::Keyboard::A){
-                        ecs.Position[i.first].first -= ecs.Speed[i.first].first*DeltaTime;
-                    }
-                    if(EventStream.back().key.code == sf::Keyboard::D){
-                        ecs.Position[i.first].first += ecs.Speed[i.first].first*DeltaTime;
-                    }
-                break;
-                case sf::Event::KeyReleased:
-                    if(EventStream.back().key.code == sf::Keyboard::W){
-                        EventStream.pop();
-                    }
-                    if(EventStream.back().key.code == sf::Keyboard::S){
-                        EventStream.pop();
-                    }
-                    if(EventStream.back().key.code == sf::Keyboard::A){
-                        EventStream.pop();
-                    }
-                    if(EventStream.back().key.code == sf::Keyboard::D){
-                        EventStream.pop();
-                    }
-                break;
-                default:
-                break;
-            }
-            
+        if(inputbroker.GetKey(sf::Keyboard::W)){
+            ecs.Position[i.first].second -= ecs.Speed[i.first].second*DeltaTime;
+        }
+        if(inputbroker.GetKey(sf::Keyboard::S)){
+            ecs.Position[i.first].second += ecs.Speed[i.first].second*DeltaTime;
+        }
+        if(inputbroker.GetKey(sf::Keyboard::A)){
+            ecs.Position[i.first].first -= ecs.Speed[i.first].first*DeltaTime;
+        }
+        if(inputbroker.GetKey(sf::Keyboard::D)){
+            ecs.Position[i.first].first += ecs.Speed[i.first].first*DeltaTime;
         }
     }
 }
 void Game::GameStateUpdateEvents(sf::Event Events){
-    
+    switch(Events.type){
+        case sf::Event::KeyPressed:
+            inputbroker.PushKey(Events.key.code, true);
+        break;
+        case sf::Event::KeyReleased:
+            inputbroker.PushKey(Events.key.code, false);
+        break;
+        default:
+        break;
+    }
 }
 void Game::GameStateRender(sf::RenderWindow &Window){
     //Game background
@@ -159,7 +145,7 @@ void Game::RegisterPlayer(){
         signed int PlayerDefHealth = 100;
         bool PlayerDefRenderable = true;
         bool PlayerDefInputtable = true;
-        sf::Vector2f PlayerDefSpeed(5, 5);
+        sf::Vector2f PlayerDefSpeed(200, 200);
         //Setting the texture key to "Player"
         std::string PlayerDefTextureKey = "Player";
         //Position insert here because ill need to use it in vertices
